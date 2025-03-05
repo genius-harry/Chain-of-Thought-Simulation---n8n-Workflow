@@ -29,7 +29,7 @@ The workflow constructs multi-step reasoning chains, progressively refining resp
    ```
 3. Import the workflow:
    - In n8n, navigate to **"Workflows" > "Import from File"**.
-   - Select `workflow.json` and upload it.
+   - Select `CoT_n8n.json` and upload it.
 4. Set Up API Credentials:
    - In n8n, go to **"Credentials"** and add your API keys for Groq and Google Gemini.
    - Ensure that the credential names match those referenced in the workflow.
