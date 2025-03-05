@@ -1,0 +1,26 @@
+# Ignore n8n-specific files
+.n8n
+
+# Ignore credentials and sensitive data
+*.env
+*.secrets
+credentials.json
+
+# Ignore all JSON files except workflow.json
+*.json
+!workflow.json
+
+# Ignore log and temporary files
+*.log
+*.tmp
+
+# Ignore dependency folders
+node_modules/
+dist/
+
+# Ignore OS and editor-specific files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
