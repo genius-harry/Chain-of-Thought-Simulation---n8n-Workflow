@@ -1,0 +1,1139 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -180,
+        -20
+      ],
+      "id": "4ad86e23-4073-422a-bcf4-794fee978e4e",
+      "name": "When chat message received",
+      "webhookId": "a4cf3047-c5ec-4cb4-bb9a-0d45209b9515"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        160,
+        220
+      ],
+      "id": "40cb3a5f-80d6-4190-93c3-94c2035e8850",
+      "name": "Auto-fixing Output Parser"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"newPrompt\": {\n      \"type\": \"string\"\n    }\n  },\n  \"required\": [\"newPrompt\"]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        340,
+        420
+      ],
+      "id": "e62970b7-644b-4a42-8027-ea5958bdf895",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        160,
+        420
+      ],
+      "id": "decaff18-a447-49b0-8ea1-d33a6a349073",
+      "name": "Groq Chat Model3",
+      "credentials": {
+        "groqApi": {
+          "id": "a5kCVeNRSE2BtRLX",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Adjust the below prompt given to a more detialed, more specific prompt for another reasoning llm model to solve: {{ $json.chatInput }}",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        40,
+        -20
+      ],
+      "id": "66429942-af5c-4ad3-8fad-969298c303d0",
+      "name": "Improving Prompt"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        540,
+        200
+      ],
+      "id": "fe04164c-f312-4049-8c56-e3f2618ea707",
+      "name": "Auto-fixing Output Parser3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        600,
+        420
+      ],
+      "id": "1cfd2dcd-61c3-4541-a5b0-9f5145a74485",
+      "name": "Groq Chat Model6",
+      "credentials": {
+        "groqApi": {
+          "id": "a5kCVeNRSE2BtRLX",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"numberOfSteps\": {\n      \"type\": \"integer\"\n    },\n    \"stepsList\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  },\n  \"required\": [\"numberOfSteps\", \"stepsList\"]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        780,
+        420
+      ],
+      "id": "9b7bc9c2-36cb-444a-917b-5248b13c35b4",
+      "name": "Structured Output Parser3"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-pro-exp-02-05",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        420,
+        120
+      ],
+      "id": "ab6cca96-dd15-497c-aefc-bfccae7ed1a5",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbS4Af2qkWwIJio0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $(\"Improving Prompt\").item.json.output[\"newPrompt\"] }}, divide this prompt into serval smaller, simpler tasks. You should first give me the number of steps and then give me a list of steps. ",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        400,
+        -20
+      ],
+      "id": "ba15a0c1-8bf4-4826-a30a-30aaa38b6b94",
+      "name": "step lists"
+    },
+    {
+      "parameters": {
+        "model": "deepseek-r1-distill-llama-70b-specdec",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1880,
+        40
+      ],
+      "id": "351cb70d-06ff-4718-bdb0-0b6e705b9fa0",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "a5kCVeNRSE2BtRLX",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=In general, you are solving a sub task of the task. \nGeneral task (which you do not need to solve):\n{{ $('Improving Prompt').item.json.output.newPrompt }}\nYour sub task(which you need to tackle): \n{{ $('step lists').item.json.output.stepsList[$runIndex] }}\nYou can also reference from the previous steps: \nAll past outputs:\n{{ $json.output.allPreviousTaskOutputs }}\n\nAlso, I want you to also output All past outputs again: {{ $json.output.allPreviousTaskOutputs }}\nkeep all the details, do not summarize. \n\nYou should output, 1, Finish you subtask\n2, all past outputs again\n",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1620,
+        -320
+      ],
+      "id": "2de90b84-490d-40ac-ab2b-ecedad8c7ea6",
+      "name": "subTask"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "af2ae512-d519-4b6b-89a7-da2ea0844594",
+              "leftValue": "={{ $('step lists').item.json.output.numberOfSteps }}",
+              "rightValue": "={{$runIndex}}",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        840,
+        -300
+      ],
+      "id": "1e114417-acdb-4f7e-ae81-1ca05c0672a0",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        0,
+        260
+      ],
+      "id": "a3811656-b69c-40d5-aad8-2218a42238e2",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbS4Af2qkWwIJio0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "f233d5a5-7417-4b87-96dd-b9a9c62af437",
+              "leftValue": "={{$runIndex}}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1060,
+        -380
+      ],
+      "id": "7e69d403-42c2-4f01-9069-9138f1bfc3da",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=In general, you are solving a sub task of the task. \nGeneral task (which you do not need to solve):\n{{ $('Improving Prompt').item.json.output.newPrompt }}\nYour sub task(which you need to tackle)(You are step 1): \n{{ $('step lists').item.json.output.stepsList[$runIndex] }}\n",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1400,
+        500
+      ],
+      "id": "7a840d96-92fb-4473-ac6b-7c8a02ff1be7",
+      "name": "First Run"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1240,
+        680
+      ],
+      "id": "debf3f90-7339-47af-b03b-e8b82e35a02e",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbS4Af2qkWwIJio0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a part of Chain of Thought. You task is to include all the previous steps and all the previous outputs for the next stage of thought. \nAll the previous Step:\n{{ $('First Run').item.json.output.taskOutput }}\n{{ $json.output.allPreviousTaskOutputs || null }}\n{{ $json.output.taskOutput }}\n",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        1280,
+        -340
+      ],
+      "id": "37ffb8cc-e8cd-4562-95d2-a7ecff7c2c27",
+      "name": "MoreRun"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        1520,
+        -60
+      ],
+      "id": "77a15a6f-f1e7-4409-b854-4db1446d2703",
+      "name": "Auto-fixing Output Parser2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        660
+      ],
+      "id": "39415a7f-718c-45c5-ac07-542b294545e0",
+      "name": "Auto-fixing Output Parser4"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"taskDescription\": {\n      \"type\": \"string\",\n      \"description\": \"The description of the task.\"\n    },\n    \"taskOutput\": {\n      \"type\": \"string\",\n      \"description\": \"The output of the task, detailing what the model found or completed.\"\n    }\n  },\n  \"required\": [\"taskDescription\", \"taskOutput\"]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2000,
+        1120
+      ],
+      "id": "17c74e59-6576-4292-88ea-e85943fa1b22",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        860
+      ],
+      "id": "688d973a-3e7a-4e7d-b6ac-5824eb619ee6",
+      "name": "Groq Chat Model2",
+      "credentials": {
+        "groqApi": {
+          "id": "a5kCVeNRSE2BtRLX",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        1920,
+        880
+      ],
+      "id": "47381071-9d66-43fa-96d1-d985c27a1551",
+      "name": "Auto-fixing Output Parser5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2180,
+        1100
+      ],
+      "id": "20c3a704-41db-4386-baf5-8b5a9571f8f6",
+      "name": "Groq Chat Model4",
+      "credentials": {
+        "groqApi": {
+          "id": "a5kCVeNRSE2BtRLX",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"allPreviousTaskOutputs\": {\n      \"type\": \"string\",\n      \"description\": \"All previous task outputs, excluding the current one, concatenated together.\"\n    },\n    \"taskOutput\": {\n      \"type\": \"string\",\n      \"description\": \"The output of the current task, detailing what the model found or completed.\"\n    }\n  },\n  \"required\": [\n    \"allPreviousTaskOutputs\",\n    \"taskOutput\"\n  ]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2180,
+        360
+      ],
+      "id": "0f4f73e0-ea48-4f62-b66d-207d10ef8750",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a part of Chain of Thought which aims to answer the question {{ $('Improving Prompt').item.json.output.newPrompt }}. Your task is to include all the previous steps and all the previous outputs for the next stage. \nYou should add:\n{{ $('subTask').item.json.output.allPreviousTaskOutputs }}\ntogether with\n{{ $('subTask').item.json.output.taskOutput }}\n\nAlso, if you feel like the question is not fulfilled, you should output needMoreWork, if not, output noNeed",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        2200,
+        -300
+      ],
+      "id": "ccc79fe5-967e-4337-993b-a5320167d5d8",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        -120
+      ],
+      "id": "5ca19f5b-0da6-450a-ac04-9cd174f37d21",
+      "name": "Google Gemini Chat Model4",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbS4Af2qkWwIJio0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are the final stage of a Chain of Thought. Your task is to finalize the answer for : \n{{ $('Improving Prompt').item.json.output.newPrompt }}\nhere's all the thinking process:\n{{ $('Basic LLM Chain').item.json.output.combinedTaskOutput }}\n\nplease finalize. \nYou should output:\n1. The thinking process, which you can reference thinking process, which you should summarize the thinking process. It should be in first person, becuase it you, the llm(s) that this chain of thought is consist of is thinking. \n2. The final answer, which should include all the info in the thinking process, and a final answer/output. ",
+        "hasOutputParser": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        2940,
+        -300
+      ],
+      "id": "668b9dc7-94d3-467f-aa69-104a54fb0755",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-pro-exp-02-05",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        3020,
+        -100
+      ],
+      "id": "4369355d-3870-4fc4-b9d1-3a86b88e885b",
+      "name": "Google Gemini Chat Model5",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbS4Af2qkWwIJio0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        3400,
+        -140
+      ],
+      "id": "79a63a8c-e7af-48d7-ae86-09da6c642e94",
+      "name": "Auto-fixing Output Parser9"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        3480,
+        80
+      ],
+      "id": "70766989-8bec-49a4-88df-62c91a29f654",
+      "name": "Google Gemini Chat Model6",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbS4Af2qkWwIJio0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"thinkingProcess\": {\n      \"type\": \"string\",\n      \"description\": \"A summary of the thinking process, which includes the references to previous steps and a synthesized thought process. Should be in first person.\"\n    },\n    \"finalAnswer\": {\n      \"type\": \"string\",\n      \"description\": \"The final answer or output, which is a culmination of the entire thinking process, including all necessary details and conclusions.\"\n    }\n  },\n  \"required\": [\"thinkingProcess\", \"finalAnswer\"]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        3600,
+        20
+      ],
+      "id": "3a17e3f0-3a47-4a23-a5cc-bb0d0b16727c",
+      "name": "Structured Output Parser6"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        -120
+      ],
+      "id": "40e03c35-a354-4163-b48f-53eb84983d5a",
+      "name": "Google Gemini Chat Model7",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbS4Af2qkWwIJio0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"allPreviousTaskOutputs\": {\n      \"type\": \"string\",\n      \"description\": \"All previous task outputs, excluding the current one, concatenated together.\"\n    }\n  },\n  \"required\": [\"allPreviousTaskOutputs\"]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2040,
+        600
+      ],
+      "id": "b8a23468-581b-4d6b-9cdf-e8ea11c877e6",
+      "name": "Structured Output Parser4"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"combinedTaskOutput\": {\n      \"type\": \"string\",\n      \"description\": \"The combined task output, which includes all previous task outputs and the current task output, preserving the details.\"\n    },\n    \"workStatus\": {\n      \"type\": \"string\",\n      \"enum\": [\"needMoreWork\", \"noNeed\"],\n      \"description\": \"Indicates whether the task needs more work or is complete.\"\n    }\n  },\n  \"required\": [\"combinedTaskOutput\", \"workStatus\"]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        2600,
+        180
+      ],
+      "id": "74b1c6c1-7b9d-4157-8812-d4c37186fb4e",
+      "name": "Structured Output Parser5"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        2280,
+        180
+      ],
+      "id": "678030aa-0a4a-4160-b023-ce496e2afae6",
+      "name": "Groq Chat Model9",
+      "credentials": {
+        "groqApi": {
+          "id": "a5kCVeNRSE2BtRLX",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2360,
+        -20
+      ],
+      "id": "b5993787-1e77-490e-8386-2b19edbbefdc",
+      "name": "Auto-fixing Output Parser8"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        160
+      ],
+      "id": "40069212-3b87-4a9e-81f6-9a474073ccf8",
+      "name": "Google Gemini Chat Model8",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "CbS4Af2qkWwIJio0",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "6013c90a-4e8b-4e40-badf-feab9b4613c3",
+              "leftValue": "={{ $json.output.workStatus }}",
+              "rightValue": "noNeed",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2560,
+        -300
+      ],
+      "id": "34ff0c22-91ac-4a7b-8703-f5b6b551ac29",
+      "name": "If2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Improving Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Improving Prompt",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Improving Prompt": {
+      "main": [
+        [
+          {
+            "node": "step lists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "step lists",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser3",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "step lists",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "step lists": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "subTask",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "subTask": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Improving Prompt",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "First Run",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "MoreRun",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "First Run": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "First Run",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MoreRun": {
+      "main": [
+        [
+          {
+            "node": "subTask",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "MoreRun",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "First Run",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser5",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser4",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser5": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser4",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser5",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "subTask",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser9": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser9",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser6": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser9",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "MoreRun",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser2",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser5": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser8",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser8",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser8": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "ed6490d7-8668-439e-9cb2-3d5437a4633c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c79d0424e9d3f02c535f44144bbbf9477df8aba02484a7c1f1df33840b43a927"
+  },
+  "id": "jPGu4Unr9lQWHW0Z",
+  "tags": []
+}
