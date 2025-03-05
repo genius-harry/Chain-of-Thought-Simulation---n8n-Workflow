@@ -42,7 +42,7 @@ The workflow constructs multi-step reasoning chains, progressively refining resp
 ├── README.md          # Documentation
 ├── LICENSE            # MIT License
 ├── .gitignore         # Ignore unnecessary files
-└── workflow.json      # The exported n8n workflow (sanitized)
+└── CoT_n8n.json      # The exported n8n workflow (sanitized)
 ```
 
 ## License
